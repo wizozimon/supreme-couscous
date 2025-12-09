@@ -57,6 +57,7 @@ HTML_FORM = """
 <html lang=\"ru\">
 <head>
   <meta charset=\"utf-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   <title>Файловое хранилище</title>
   <style>
     * { box-sizing: border-box; }
@@ -69,6 +70,7 @@ HTML_FORM = """
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px;
     }
     .container {
       background: rgba(17,24,39,0.92);
@@ -126,6 +128,7 @@ HTML_FORM = """
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      flex: 1;
     }
     input[type=file] {
       position: absolute;
@@ -193,12 +196,30 @@ HTML_FORM = """
       color: #6b7280;
     }
     @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
       .container {
-        margin: 16px;
+        margin: 0;
         padding: 22px 18px 18px;
+        width: 100%;
+        max-width: 100%;
       }
       h1 {
         font-size: 22px;
+      }
+    }
+    @media (max-width: 420px) {
+      .file-input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .file-input-wrapper span {
+        white-space: normal;
+      }
+      button[type=submit] {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
