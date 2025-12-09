@@ -263,18 +263,18 @@ def upload():
         s3_base_url = os.getenv("S3_PUBLIC_BASE_URL", f"https://storage.yandexcloud.net/{S3_BUCKET}")
         download_url = f"{s3_base_url}/{quote(object_key)}"
     else:
-        # Локальное хранилище на этом ноуте
+        # Локальное хранилище на этом ноуте / на сервере хостинга
         save_path = STORAGE_DIR / filename
         file.save(save_path)
-        # Если задан PUBLIC_BASE_URL (например, домен/ngrok-адрес), используем его для внешних ссылок
+        # Если задан PUBLIC_BASE_URL (например, домен/ngrok-адрес или кастомный домен) — используем его
         public_base = os.getenv("PUBLIC_BASE_URL")
         if public_base:
             public_base = public_base.rstrip("/")
             download_url = public_base + url_for("download_file", filename=filename)
         else:
-            # Иначе генерируем ссылку с реальным IP машины, чтобы она работала внутри локальной сети
-            local_ip = get_local_ip()
-            download_url = f"http://{local_ip}:{PORT}" + url_for("download_file", filename=filename)
+            # Иначе строим абсолютный URL на основе домена, с которого пришёл запрос
+            # Это корректно работает на хостингах (Render, Railway и т.п.)
+            download_url = url_for("download_file", filename=filename, _external=True)
 
     return render_template_string(HTML_FORM, link=download_url)
 
